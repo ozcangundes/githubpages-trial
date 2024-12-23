@@ -11,7 +11,7 @@ rooms = {}  # Store active chat rooms: {room_id: [user1, user2]}
 
 @app.route("/")
 def index():
-    return render_template("chat.html")
+    return render_template("index.html")
 
 @socketio.on("connect")
 def handle_connect():
