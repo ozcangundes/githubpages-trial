@@ -64,4 +64,4 @@ def handle_chat_message(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, allow_unsafe_werkzeug=True)
+    socketio.run(app, allow_unsafe_werkzeug=True, host='0.0.0.0')
