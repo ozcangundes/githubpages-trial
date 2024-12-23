@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyRetroBFF</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <h1>MyRetroBFF</h1>
+        <div id="chat-log"></div>
+        <input id="nickname" placeholder="Enter your nickname" />
+        <button onclick="setNickname()">Start Chat</button>
+        <input id="chat-input" placeholder="Type a message" disabled onkeypress="if (event.key === 'Enter') sendMessage();" />
+        <button onclick="sendMessage()" disabled>Send</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        let nickname = "";
+
+        socket.on("system_message", (message) => {
+            const log = document.getElementById("chat-log");
+            log.innerHTML += `<div><i>${message}</i></div>`;
+        });
+
+        socket.on("chat_message", (data) => {
+            const log = document.getElementById("chat-log");
+            log.innerHTML += `<div><b><u>${data.nickname}:</u></b> ${data.text}</div>`;
+        });
+
+        function setNickname() {
+            nickname = document.getElementById("nickname").value;
+            socket.emit("set_nickname", nickname);
+            document.getElementById("nickname").disabled = true;
+            document.getElementById("chat-input").disabled = false;
+            document.querySelector("button[onclick='sendMessage()']").disabled = false;
+        }
+
+        function sendMessage() {
+            const message = document.getElementById("chat-input").value;
+            socket.emit("chat_message", message);
+            document.getElementById("chat-input").value = "";
+        }
+        
+    </script>
+</body>
+</html>
